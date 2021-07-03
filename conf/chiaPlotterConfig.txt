@@ -1,0 +1,29 @@
+RUN_SCRIPT="true" # Change between true/false
+
+tempDir="/mnt/raidDrive"
+
+finalDirs=(
+"/media/$(whoami)/farm13"
+"/media/$(whoami)/farm14"
+)
+
+memoryPerPlot="4500"
+threadsPerPlot="3"
+
+desiredNumberOfPlots=10
+desiredNumberOfPlotsInPhase1=1
+
+
+# Use these to configure startPlotterGradually.sh
+rampSlowlyFrom=1
+rampSlowlyTo=5
+secondsBetween=900
+
+# Use this if you want to farm for someone else. Otherwise, leave false
+useOtherFarmerKeys="false"
+farmerKey="farmerPublickey"
+publicKey="publickey"
+
+
+# Path to chia-blockchain project
+CHIA_BLOCKCHAIN_HOME="$HOME/chia-blockchain"

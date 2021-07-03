@@ -1,0 +1,14 @@
+.vscode/launch.json
+cronjob.log
+state/
+running/
+finished/
+netspace.txt
+test.sh
+
+# Ignoring symlinks
+startPlotterGradually.sh
+startGUI.sh
+startPlotter.sh
+stopPlotter.sh
+addNewFinalDirs.sh
