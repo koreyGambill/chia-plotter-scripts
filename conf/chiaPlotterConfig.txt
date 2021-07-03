@@ -1,4 +1,4 @@
-RUN_SCRIPT="true" # Change between true/false
+RUN_SCRIPT="false" # Change between true/false
 
 tempDir="/mnt/raidDrive"
 
