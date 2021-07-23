@@ -5,6 +5,10 @@ running/
 finished/
 netspace.txt
 test.sh
+logs/
+health-check-env/
+health-check-config.json
+__pycache__
 
 # Ignoring symlinks
 startPlotterGradually.sh
