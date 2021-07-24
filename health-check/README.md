@@ -160,7 +160,7 @@ Wants=chia-health-checker.service
 
 [Service]
 Type=oneshot
-ExecStart=/home/<user>/code/chia-plotter-scripts/health-check/health-check-env/bin/python3 /home/<user>/code/chia-plotter-scripts/health-check/health-checker.py
+ExecStart=/home/<user>/path/to/chia-plotter-scripts/health-check/health-check-env/bin/python3 /home/<user>/path/to/chia-plotter-scripts/health-check/health-checker.py
 
 [Install]
 WantedBy=multi-user.target
