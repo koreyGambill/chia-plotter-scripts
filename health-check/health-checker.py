@@ -76,6 +76,9 @@ def should_send_email(content):
                 "last_notification_status": current_notification_status
                 }))
         return True
+
+    logging.debug("Not sending email because the status did not change from {status} \
+        and the last notification was too recent: {time}".format(status=current_notification_status, time=last_notification_time))
     return False
 
 def send_email(content):
