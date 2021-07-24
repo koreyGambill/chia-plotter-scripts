@@ -50,7 +50,6 @@ def health_check():
                 "message": "Did not find an eligible farming log in the last %d entries" % LINES_TO_SEARCH, 
             })
 
-
         app.logger.debug('Found last line: ' + last_farming_log)
         logs_time_match = re.search(DATETIME_REGEX, last_farming_log)
         

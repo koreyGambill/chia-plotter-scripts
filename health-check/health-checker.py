@@ -15,17 +15,6 @@ if not os.path.exists(health_checker_log_file):
     open(health_checker_log_file, 'w').close
 logging.basicConfig(filename=health_checker_log_file, level=logging.DEBUG, format=f'%(asctime)s %(levelname)s: %(message)s')
 
-# Read out last notification data
-data_file = os.path.join(file_path, "data/health-checker-db.json")
-if not os.path.exists(data_file):
-    Path(data_file).parent.mkdir(parents=True, exist_ok=True)
-    with open(data_file, 'w') as data:
-        # Write the initial data
-        data.write(json.dumps({
-            "last_notification_time": str(datetime.now() - timedelta(hours=24)),
-            "last_notification_status": str("unknown")
-            }))
-
 # Read out config
 health_check_config_file = os.path.join(file_path, "config/health-check-config.json")
 if not os.path.exists(health_check_config_file):
@@ -38,6 +27,17 @@ NOTIFICATION_EMAIL = config_json['notification_email']
 FROM_EMAIL = config_json['from_email']
 SERVER_IP = config_json['server_ip']
 PORT = config_json['port']
+
+# Read out last notification data
+data_file = os.path.join(file_path, "data/health-checker-db.json")
+if not os.path.exists(data_file):
+    Path(data_file).parent.mkdir(parents=True, exist_ok=True)
+    with open(data_file, 'w') as data:
+        # Write the initial data
+        data.write(json.dumps({
+            "last_notification_time": str(datetime.now() - timedelta(hours=24)),
+            "last_notification_status": str("unknown")
+            }))
 
 def should_send_email(content):
     # Read in data
