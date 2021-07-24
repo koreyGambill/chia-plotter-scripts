@@ -47,6 +47,28 @@ Date: Thu, 22 Jul 2021 02:52:52 GMT
 ```
 
 ```
+HTTP/1.0 200 OK
+ContentType: application/json
+Content-Type: text/html; charset=utf-8
+Content-Length: 119
+Server: Werkzeug/2.0.1 Python/3.8.10
+Date: Thu, 22 Jul 2021 02:52:52 GMT
+
+{"result": "unhealthy", "message": "Service has been down for 700 seconds."}%   
+```
+
+```
+HTTP/1.0 500 INTERNAL SERVER ERROR
+ContentType: application/json
+Content-Type: text/html; charset=utf-8
+Content-Length: 119
+Server: Werkzeug/2.0.1 Python/3.8.10
+Date: Thu, 22 Jul 2021 04:24:26 GMT
+
+{"result": "unknown", "message": "Health check server caught exception <exception message>"}%   
+```
+
+```
 HTTP/1.0 500 INTERNAL SERVER ERROR
 Content-Type: text/html; charset=utf-8
 Content-Length: 290
