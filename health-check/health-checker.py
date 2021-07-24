@@ -96,7 +96,7 @@ def main():
     try:
         r = requests.get(health_check_url, timeout=1)
         content = r.json()
-        logging.debug("Request came back: %s" % r)
+        logging.debug("Request came back: %s" % content)
         if should_send_email(content):
             send_email(content)
     except requests.exceptions.RequestException as e:
