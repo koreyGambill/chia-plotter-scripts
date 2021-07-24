@@ -18,8 +18,8 @@ logging.basicConfig(filename=health_check_log_file, level=logging.DEBUG, format=
 health_check_config_file = os.path.join(file_path, '../config/health-check-config.json')
 if not os.path.exists(health_check_config_file):
     logging.error("health-check-config.json file is not configured.")
-    raise FileNotFoundError("health-check-config.json file is not configured. \n\
-        Set it up according to the steps in the README.md")
+    raise FileNotFoundError("health-check-config.json file is not configured. "
+        "Set it up according to the steps in the README.md")
 with open(health_check_config_file) as config:
     config_json = json.load(config)
 PORT = config_json["port"]

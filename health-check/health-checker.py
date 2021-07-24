@@ -19,8 +19,8 @@ logging.basicConfig(filename=health_checker_log_file, level=logging.DEBUG, forma
 health_check_config_file = os.path.join(file_path, "config/health-check-config.json")
 if not os.path.exists(health_check_config_file):
     logging.error("health-check-config.json file is not configured.")
-    raise FileNotFoundError("health-check-config.json file is not configured. \n\
-        Set it up according to the steps in the README.md")
+    raise FileNotFoundError("health-check-config.json file is not configured. "
+        "Set it up according to the steps in the README.md")
 with open(health_check_config_file) as config:
     config_json = json.load(config)
 NOTIFICATION_EMAIL = config_json['notification_email']
@@ -77,8 +77,8 @@ def should_send_email(content):
                 }))
         return True
 
-    logging.debug("Not sending email because the status did not change from {status} \
-        and the last notification was too recent: {time}".format(status=current_notification_status, time=last_notification_time))
+    logging.debug("Not sending email because the status did not change from {status} "
+        "and the last notification was too recent: {time}".format(status=current_notification_status, time=last_notification_time))
     return False
 
 def send_email(content):
