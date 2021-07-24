@@ -6,6 +6,7 @@ finished/
 netspace.txt
 test.sh
 logs/
+data/
 health-check-env/
 health-check-config.json
 __pycache__
