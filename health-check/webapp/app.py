@@ -85,4 +85,4 @@ def health_check():
         }, 500)
 
 if __name__ == '__main__':
-    app.run(debug=False, host='0.0.0.0', port=5566)
+    app.run(debug=False, host='0.0.0.0', port=PORT)
