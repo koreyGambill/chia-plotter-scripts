@@ -114,7 +114,7 @@ Here are a few useful commands:
 You should be able to run a command like `curl -i 127.0.0.1:5566/health-check` and get a response.
 
 ## Setup chia-health-checker
-If the server is working, you are ready to set up a script to do the health checks. It's best if the health-checker script is ran on a different computer, and even better if on a different internet connection. GCP Cloud Functions would be an excellent way to ping the health-check-server.
+If the server is working, you are ready to set up a script to do the health checks. It's best if the health_checker script is ran on a different computer, and even better if on a different internet connection. GCP Cloud Functions would be an excellent way to ping the health-check-server.
 
 ## Local Setup
 This would be a great use for a raspberry pi - which is what I will run this from.
@@ -160,7 +160,7 @@ Wants=chia-health-checker.service
 
 [Service]
 Type=oneshot
-ExecStart=/home/<user>/path/to/chia-plotter-scripts/health-check/health-check-env/bin/python3 /home/<user>/path/to/chia-plotter-scripts/health-check/health-checker.py
+ExecStart=/home/<user>/path/to/chia-plotter-scripts/health-check/health-check-env/bin/python3 /home/<user>/path/to/chia-plotter-scripts/health-check/health_checker.py
 
 [Install]
 WantedBy=multi-user.target
