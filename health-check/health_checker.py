@@ -2,6 +2,7 @@ import logging
 import os
 import requests
 import smtplib
+import ssl
 import json
 from pathlib import Path
 from datetime import datetime, time, timedelta
@@ -23,10 +24,11 @@ if not os.path.exists(health_check_config_file):
         "Set it up according to the steps in the README.md")
 with open(health_check_config_file) as config:
     config_json = json.load(config)
-NOTIFICATION_EMAIL = config_json['notification_email']
-FROM_EMAIL = config_json['from_email']
-SERVER_IP = config_json['server_ip']
-PORT = config_json['port']
+NOTIFICATION_EMAIL = config_json['health_checker_config']['notification_email']
+FROM_EMAIL = config_json['health_checker_config']['from_email']
+SERVER_IP = config_json['health_checker_config']['server_ip']
+SMTP_LOCATION = config_json['health_checker_config']['smtp_location']
+PORT = config_json['shared_config']['port']
 
 # Read out last notification data
 data_file = os.path.join(file_path, "data/health-checker-db.json")
@@ -90,8 +92,19 @@ def send_email(content):
 
     logging.info("sending email: %s" % msg)
 
-    smtp_obj = smtplib.SMTP('localhost')
-    smtp_obj.send_message(msg)
+    if SMTP_LOCATION == 'local':
+        with smtplib.SMTP('localhost') as server:
+            server.send_message(msg)
+    elif SMTP_LOCATION == 'gmail':
+        gmail_app_password = os.getenv("gmail_app_password")
+        if gmail_app_password != None:
+            with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=ssl.create_default_context()) as server:
+                server.login(FROM_EMAIL, gmail_app_password)
+                server.send_message(msg)
+        else:
+            logging.warn("Could not send email through gmail. gmail_app_password not set in environment variables.")
+    else:
+        logging.warn("SMTP_LOCATION is not set to an accepted value.")
 
 def main():
     health_check_url = 'http://%s:%d/health-check' % (SERVER_IP, PORT)

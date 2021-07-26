@@ -10,7 +10,7 @@ python3 -m pip install -r requirements.txt
 deactivate
 cp ./config/health-check-config-example.json ./config/health-check-config.json
 ```
-Then update the health-check-config.json with your specific configuration and the IP address of your server.
+Then update the health-check-config.json with your specific configuration and the IP address of your server. Acceptable values for smtp_location are 'local' or 'gmail'.
 
 ## Run Server
 `bash path/to/health-check/run-server-dev.sh` - Starts the server
@@ -130,10 +130,18 @@ deactivate
 cp ./config/health-check-config-example.json ./config/health-check-config.json
 ```
 
-Then update the health-check-config.json with your specific configuration and the IP address of your server.
+Then update the health-check-config.json with your specific configuration and the IP address of your server. Acceptable values for smtp_location are 'local' or 'gmail'. Then follow either the Setup Local SMTP Server or Setup Gmail instructions below depending on your choice.
 
-### Setup SMTP Server
+### Option 1) Setup Local SMTP Server
+The code is able to be ran with a local SMTP server or with a gmail account.
+
 Here's a [great guide](https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-postfix-as-a-send-only-smtp-server-on-ubuntu-18-04) from digital ocean on setting up an SMTP server which will allow you to send mail from your local machine.
+
+[This one](https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-postfix-on-ubuntu-20-04) is more current, but doesn't go through certbot setup.
+
+### Option 2) Setup Gmail
+It's a good idea to create a gmail account specifically for this application. Then in your settings you just need to enable 2 factor authentication and then create an App password - that's the password you'll use for this application and you'll need to save it in the chia-health-checker.service file. See the Setup Daemon section below.
+
 
 ### Setup Daemon
 If you're using systemd, you can create these two files to run this script on a timer:
@@ -160,16 +168,19 @@ Wants=chia-health-checker.service
 
 [Service]
 Type=oneshot
+Environment=gmail_app_password=<password>
 ExecStart=/home/<user>/path/to/chia-plotter-scripts/health-check/health-check-env/bin/python3 /home/<user>/path/to/chia-plotter-scripts/health-check/health_checker.py
 
 [Install]
 WantedBy=multi-user.target
 ```
 
-Then you will need to run enable and start commands on both the service and the timer. See list of helpful commands above.
+Replace the password on the Environment entry (or delete the line if you are using a local SMTP server), and replace the user and path on the ExecStart entry. Then you will need to run enable and start commands on both the service and the timer. See list of helpful systemctl commands above.
 
 
 ### Unblock Emails
-Now unless you purchased a domain and set up certificates, your emails will likely be going to your spam folder. On gmail it's really easy to set up a rule to let those into your inbox just by going into settings -> (tab) Filters and Blocked Addresses -> Create a new filter.
+If you set up a gmail to send emails through, they shouldn't be marked as spam.
+
+If you set up a local SMTP server and did not purchase a domain and setup certificates, your emails will likely be going to your spam folder. On gmail it's really easy to set up a rule to let those into your inbox just by going into settings -> (tab) Filters and Blocked Addresses -> Create a new filter.
 
 After unblocking the emails, you should be getting emails to your inbox instead of to spam.

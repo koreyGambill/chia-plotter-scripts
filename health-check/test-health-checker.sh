@@ -1,6 +1,7 @@
 #!bin/bash
 #
-# Runs the flask web server
+# Runs the health_checker.py script and loads in gmail_app_password to the environment variables.
+# Use this to test without using systemctl
 
 # get path of this file
 source="${BASH_SOURCE[0]:-$0}"
@@ -11,4 +12,5 @@ while [ -h "$source" ]; do # resolve $source until the file is no longer a symli
 done
 file_path="$( cd -P "$( dirname "$source" )" && pwd )"
 
-"$file_path/health-check-env/bin/python3" $file_path/webapp/app.py
+export gmail_app_password=$(cat $HOME/.apikey/chia-health-checker-gmail.pass)
+"$file_path/health-check-env/bin/python3" $file_path/health_checker.py

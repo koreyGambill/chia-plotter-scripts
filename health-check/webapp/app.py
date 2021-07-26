@@ -17,12 +17,12 @@ logging.basicConfig(filename=health_check_log_file, level=logging.DEBUG, format=
 # Read out config
 health_check_config_file = os.path.join(file_path, '../config/health-check-config.json')
 if not os.path.exists(health_check_config_file):
-    logging.error("health-check-config.json file is not configured.")
-    raise FileNotFoundError("health-check-config.json file is not configured. "
-        "Set it up according to the steps in the README.md")
+    logging.error('health-check-config.json file is not configured.')
+    raise FileNotFoundError('health-check-config.json file is not configured. '
+        'Set it up according to the steps in the README.md')
 with open(health_check_config_file) as config:
     config_json = json.load(config)
-PORT = config_json["port"]
+PORT = config_json['shared_config']['port']
 LINES_TO_SEARCH=100
 CHIA_LOGS_FILE = os.path.join(Path.home(), '.chia/mainnet/log/debug.log')
 DATETIME_REGEX = '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}'
