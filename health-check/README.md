@@ -82,9 +82,10 @@ Date: Thu, 22 Jul 2021 02:43:35 GMT
 ```
 
 ## Start Server Automatically
-If you want to just run the server automatically whenever you start your computer, you can run it as a daemon using systemd (assuming you are on Linux). To do this, just add a file named "chia-health-check-server.service" to the folder /etc/systemd/system and populate it with the following text (replace \<user> with your user).
+If you want to just run the server automatically whenever you start your computer, you can run it as a daemon using systemd (assuming you are on Linux). To do this, just add a file named "chia-health-check-server.service" to the folder /etc/systemd/system and populate it with the following text (replace \<user> with your user). You can do that with the following command
 
-```
+``` bash
+echo "
 [Unit]
 Description="Starts a Flask server that allows health checking a chia farmer by scraping chia logs"
 After=network.target
@@ -97,6 +98,7 @@ Restart=always
 
 [Install]
 WantedBy=multi-user.target
+" | sudo tee /etc/systemd/system/chia-health-check-server.service
 ```
 
 Then just do a daemon-reload, and you can manage your server using systemctl.
@@ -150,10 +152,10 @@ If you are using a gmail server, you can run test-health-checker.sh to run the s
 It's recommended to do a `chmod 600 $HOME/.apikey/chia-health-checker-gmail.pass` command as well to make sure your user is the only one with read/write. Note that anyone with root access on your computer will still have access to view it.
 
 ### Setup Daemon
-If you're using systemd, you can create these two files to run this script on a timer:
+If you're using systemd, you can run these commands to create the two systemd files to run this script on a timer:
 
-/etc/systemd/system/chia-health-checker.timer
-```
+``` bash
+echo "
 [Unit]
 Description="timer for chia-health-checker"
 Requires=chia-health-checker.service
@@ -164,10 +166,11 @@ OnCalendar=*:0/5
 
 [Install]
 WantedBy=timers.target
+" | sudo tee /etc/systemd/system/chia-health-checker.timer
 ```
 
-/etc/systemd/system/chia-health-checker.service
-```
+``` bash
+echo "
 [Unit]
 Description="Checks the status of chia farming, and emails user if unhealthy."
 Wants=chia-health-checker.service
@@ -179,6 +182,7 @@ ExecStart=/home/<user>/path/to/chia-plotter-scripts/health-check/health-check-en
 
 [Install]
 WantedBy=multi-user.target
+" | sudo tee /etc/systemd/system/chia-health-checker.service
 ```
 
 Replace the password on the Environment entry (or delete the line if you are using a local SMTP server), and replace the user and path on the ExecStart entry. Then you will need to run enable and start commands on both the service and the timer. See list of helpful systemctl commands above.
