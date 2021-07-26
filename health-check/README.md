@@ -185,7 +185,7 @@ WantedBy=multi-user.target
 " | sudo tee /etc/systemd/system/chia-health-checker.service
 ```
 
-Replace the password on the Environment entry (or delete the line if you are using a local SMTP server), and replace the user and path on the ExecStart entry. Then you will need to run enable and start commands on both the service and the timer. See list of helpful systemctl commands above.
+Replace the password on the Environment entry (or delete the line if you are using a local SMTP server), and replace the user and path on the ExecStart entry. Then you will need to reload the daemon and run enable and start commands on both the service and the timer. See list of helpful systemctl commands above.
 
 
 ### Unblock Emails
