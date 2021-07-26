@@ -55,7 +55,7 @@ def should_send_email(content):
 
     # If status ever changes, notify. This includes unhealthy -> unknown or visa versa.
     if last_notification_status != current_notification_status:
-        logging.debug("Status Changed! Sending notification email")
+        logging.debug("Status changed from %s to %s. Sending notification email" % (last_notification_status, current_notification_status))
         should_send_email = True
 
     # If last and current status are healthy only notify every 24 hours.
