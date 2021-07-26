@@ -142,6 +142,12 @@ Here's a [great guide](https://www.digitalocean.com/community/tutorials/how-to-i
 ### Option 2) Setup Gmail
 It's a good idea to create a gmail account specifically for this application. Then in your settings you just need to enable 2 factor authentication and then create an App password - that's the password you'll use for this application and you'll need to save it in the chia-health-checker.service file. See the Setup Daemon section below.
 
+### Test Before Daemon
+If you are using a local SMTP server, you can just run the health_checker.py script in the virtual environment. 
+
+If you are using a gmail server, you can run test-health-checker.sh to run the script after loading the password as an environment variable. First you'll need to create the file '$HOME/.apikey/chia-health-checker-gmail.pass' and paste your app password into it.
+
+It's recommended to do a `chmod 600 $HOME/.apikey/chia-health-checker-gmail.pass` command as well to make sure your user is the only one with read/write. Note that anyone with root access on your computer will still have access to view it.
 
 ### Setup Daemon
 If you're using systemd, you can create these two files to run this script on a timer:
