@@ -26,7 +26,7 @@ with open(health_check_config_file) as config:
     config_json = json.load(config)
 NOTIFICATION_EMAIL = config_json['health_checker_config']['notification_email']
 FROM_EMAIL = config_json['health_checker_config']['from_email']
-SERVER_IP = config_json['health_checker_config']['server_ip']
+SERVER = config_json['health_checker_config']['server']
 SMTP_LOCATION = config_json['health_checker_config']['smtp_location']
 PORT = config_json['shared_config']['port']
 
@@ -107,7 +107,7 @@ def send_email(content):
         logging.warn("SMTP_LOCATION is not set to an accepted value.")
 
 def main():
-    health_check_url = 'http://%s:%d/health-check' % (SERVER_IP, PORT)
+    health_check_url = 'http://%s:%d/health-check' % (SERVER, PORT)
     logging.debug("requesting health check to %s" % health_check_url)
     try:
         r = requests.get(health_check_url, timeout=1)

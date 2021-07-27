@@ -10,7 +10,7 @@ python3 -m pip install -r requirements.txt
 deactivate
 cp ./config/health-check-config-example.json ./config/health-check-config.json
 ```
-Then update the health-check-config.json with your specific configuration and the IP address of your server. Acceptable values for smtp_location are 'local' or 'gmail'.
+Then update the health-check-config.json with your specific configuration and either the IP address or hostname of your server. I don't like hostname as much in this case because it makes firewall more difficult - but doable. Acceptable values for smtp_location are 'local' or 'gmail'.
 
 ## Run Server
 `bash path/to/health-check/run-server-dev.sh` - Starts the server
@@ -132,7 +132,7 @@ deactivate
 cp ./config/health-check-config-example.json ./config/health-check-config.json
 ```
 
-Then update the health-check-config.json with your specific configuration and the IP address of your server. Acceptable values for smtp_location are 'local' or 'gmail'. Then follow either the Setup Local SMTP Server or Setup Gmail instructions below depending on your choice.
+Then update the health-check-config.json with your specific configuration and either the IP address or hostname of your server. I don't like hostname as much in this case because it makes firewall more difficult - but doable. Acceptable values for smtp_location are 'local' or 'gmail'. Then follow either the Setup Local SMTP Server or Setup Gmail instructions below depending on your choice.
 
 ### Option 1) Setup Local SMTP Server
 The code is able to be ran with a local SMTP server or with a gmail account.

@@ -2,7 +2,7 @@
     "health_checker_config": {
         "notification_email": "some.user@gmail.com",
         "from_email": "HealthCheckBot@chia-health-checker.dev",
-        "server_ip": "127.0.0.1",
+        "server": "127.0.0.1",
         "smtp_location": "local"
     },
     "shared_config": {
