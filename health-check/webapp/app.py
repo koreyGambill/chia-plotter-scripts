@@ -15,7 +15,7 @@ if not os.path.exists(health_check_log_file):
 logging.basicConfig(filename=health_check_log_file, level=logging.DEBUG, format=f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
 
 # Read out config
-health_check_config_file = os.path.join(file_path, '../config/health-check-config.json')
+health_check_config_file = os.path.join(file_path, '../conf/health-check-config.json')
 if not os.path.exists(health_check_config_file):
     logging.error('health-check-config.json file is not configured.')
     raise FileNotFoundError('health-check-config.json file is not configured. '
