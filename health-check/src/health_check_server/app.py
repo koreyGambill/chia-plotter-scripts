@@ -26,7 +26,7 @@ with open(health_check_config_file) as config:
 PORT = config_json['shared_config']['port']
 LINES_TO_SEARCH=100
 CHIA_LOGS_FILE = os.path.join(Path.home(), '.chia/mainnet/log/debug.log')
-DATETIME_REGEX = '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}'
+DATETIME_REGEX = '^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}'
 
 app = Flask(__name__)
 

@@ -10,7 +10,7 @@ from email.message import EmailMessage
 
 
 file_path = os.path.dirname(__file__)
-root_path = os.path.join(file_path, '..')
+root_path = os.path.join(file_path, '../..')
 
 # Set up logging
 health_checker_log_file = os.path.join(root_path, "logs/health-checker.log")
@@ -105,9 +105,9 @@ def send_email(content):
                 server.login(FROM_EMAIL, gmail_app_password)
                 server.send_message(msg)
         else:
-            logging.warn("Could not send email through gmail. gmail_app_password not set in environment variables.")
+            logging.warning("Could not send email through gmail. gmail_app_password not set in environment variables.")
     else:
-        logging.warn("SMTP_LOCATION is not set to an accepted value.")
+        logging.warning("SMTP_LOCATION is not set to an accepted value.")
 
 def main():
     health_check_url = 'http://%s:%d/health-check' % (SERVER, PORT)

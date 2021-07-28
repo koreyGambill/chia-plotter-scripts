@@ -1,6 +1,12 @@
 # Health Check Server
 This server indicates whether the chia farmer is still successfully farming. This is meant to be hit by another service - like a gcp cloud function - that will do health checks periodically and send an email if it's been down for x amount of time.
 
+## Running Tests
+Must run pytest with the health-check-env activated. Can run pytest from directories chia-plotter-scripts/, health-check/, or test/. It will find all test_*.py or *_test.py files and run their tests.
+
+`pytest` - runs tests showing pass/fail output.
+`pytest --log-cli-level=DEBUG -s` - runs tests and prints logging to console.
+
 ## Setup Environment
 Navigate to health-check in terminal and run the commands
 ``` bash
