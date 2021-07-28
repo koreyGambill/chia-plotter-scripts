@@ -12,15 +12,15 @@ CHIA_PLOTTER_SCRIPTS_HOME=`dirname $DIR`
 
 runningLogsDir="$CHIA_PLOTTER_SCRIPTS_HOME/logs/running"
 finishedLogsDir="$CHIA_PLOTTER_SCRIPTS_HOME/logs/finished"
-numberPlotsMadeFile="$CHIA_PLOTTER_SCRIPTS_HOME/conf/state/numberPlotsMade.txt"
-lastFinalDirFile="$CHIA_PLOTTER_SCRIPTS_HOME/conf/state/lastFinalDir.txt"
+numberPlotsMadeFile="$CHIA_PLOTTER_SCRIPTS_HOME/data/numberPlotsMade.txt"
+lastFinalDirFile="$CHIA_PLOTTER_SCRIPTS_HOME/data/lastFinalDir.txt"
 
 # Runs chia plotter pulling in variables from the config files
 
 # -----------------------------------------------------
 
 # Loading in and initializing variables
-. $CHIA_PLOTTER_SCRIPTS_HOME/conf/chiaPlotterConfig.txt
+. $CHIA_PLOTTER_SCRIPTS_HOME/conf/chia-plotter-config.txt
 
 timestamp=`date +%Y-%m-%d_%H:%M:%S`
 echo "-------------NEW CRONJOB-------------"

@@ -1,7 +1,7 @@
 # Chia Installation
 
 # Install Chia Blockchain Code
-If you don't install this at ~/chia-blockchain, then you should update the conf/chiaPlotterConfig.txt with your directory of installation
+If you don't install this at ~/chia-blockchain, then you should update the conf/chia-plotter-config.txt with your directory of installation
 https://github.com/Chia-Network/chia-blockchain/wiki/INSTALL#ubuntudebian
 
 # General Info
@@ -17,7 +17,7 @@ The logs from the cronjob will be output to logs/cronjob.log
 
 **Pauses chiaPlotter.sh**  
 It will also pause the chiaPlotter for now so that the runs triggered by cronjob don't actually run.  
-The chiaPlotter runs if the RUN_SCRIPT="true", so the install script sets it to false. This is set in conf/chiaPlotterConfig.txt.
+The chiaPlotter runs if the RUN_SCRIPT="true", so the install script sets it to false. This is set in conf/chia-plotter-config.txt.
 
 **It's re-runnable**  
 The install script should be idempotent - meaning that it deletes the cronjob task and alias' that it creates before it re-creates them. You can run the install over and over with no consequence. Also, if you move your chia-plotter-scripts folder, you can re-run the install script to get the alias' and cronjob pointing at the right spots again.
@@ -28,7 +28,8 @@ Run the script install.sh with a source command like
 You can run it with `bash install.sh`, but it won't allow the variables set to be available until you reload your terminal session
 
 
-# Configuring chiaPlotterConfig
+# Configuring chia-plotter-config
+First, make a copy of conf/chia-plotter-config-example.txt, and name it chia-plotter-config.txt. Then configure it.
 
 Right now, it takes 256.6 GB temp space to create a plot. That means a 1tb SSD can do 3 temp files. a 4tb SSD in a raid0 should be able to do 15.5 temp files. I think RAID0 wastes some space, but you should be able to get away with 15 or 14.  
 
@@ -90,7 +91,7 @@ First you want to format the drive like this:
 `sudo mkfs.ext4 -m 0 -T largefile4 -L <driveLabel> /dev/<mountpoint>`  
 
 ## Add to Plotter
-Add new drives to the finalDirs variable in conf/chiaPlotterConfig.txt
+Add new drives to the finalDirs variable in conf/chia-plotter-config.txt
 Then run the addNewFinalDirs.sh file. It will create the plots directory and add the right permissions.
 Now you should be ready to plot to the hard drives
 

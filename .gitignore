@@ -1,19 +1,20 @@
-.vscode/launch.json
-cronjob.log
-state/
-running/
-finished/
-netspace.txt
-test.sh
+# Chia Plotter
+.vscode/
 logs/
 data/
-health-check-env/
-health-check-config.json
-__pycache__
+chia-plotter-config.txt
+test.sh
 
-# Ignoring symlinks
+## Ignoring symlinks
 startPlotterGradually.sh
 startGUI.sh
 startPlotter.sh
 stopPlotter.sh
 addNewFinalDirs.sh
+
+# Health Check
+__pycache__
+health-check-env/
+health-check-config.json
+logs/
+data/
