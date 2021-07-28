@@ -178,7 +178,7 @@ Wants=chia-health-checker.service
 [Service]
 Type=oneshot
 Environment=gmail_app_password=<password>
-ExecStart=/home/<user>/path/to/chia-plotter-scripts/health-check/health-check-env/bin/python3 /home/<user>/path/to/chia-plotter-scripts/health-check/health_checker.py
+ExecStart=/home/<user>/path/to/chia-plotter-scripts/health-check/health-check-env/bin/python3 /home/<user>/path/to/chia-plotter-scripts/health-check/src/health_checker.py
 
 [Install]
 WantedBy=multi-user.target

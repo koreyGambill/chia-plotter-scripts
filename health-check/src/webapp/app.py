@@ -6,16 +6,17 @@ import logging
 import re
 import os
 
-# Set up logging
 file_path = os.path.dirname(__file__)
-health_check_log_file = os.path.join(file_path, '../logs/health-check-server.log')
+root_path = os.path.join(file_path, "../..")
+# Set up logging
+health_check_log_file = os.path.join(root_path, 'logs/health-check-server.log')
 if not os.path.exists(health_check_log_file):
     Path(health_check_log_file).parent.mkdir(parents=True, exist_ok=True)
     open(health_check_log_file, 'w').close
 logging.basicConfig(filename=health_check_log_file, level=logging.DEBUG, format=f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
 
 # Read out config
-health_check_config_file = os.path.join(file_path, '../conf/health-check-config.json')
+health_check_config_file = os.path.join(root_path, 'conf/health-check-config.json')
 if not os.path.exists(health_check_config_file):
     logging.error('health-check-config.json file is not configured.')
     raise FileNotFoundError('health-check-config.json file is not configured. '

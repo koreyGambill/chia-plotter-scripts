@@ -13,4 +13,4 @@ done
 file_path="$( cd -P "$( dirname "$source" )" && pwd )"
 
 export gmail_app_password=$(cat $HOME/.apikey/chia-health-checker-gmail.pass)
-"$file_path/health-check-env/bin/python3" $file_path/health_checker.py
+"$file_path/health-check-env/bin/python3" $file_path/src/health_checker.py

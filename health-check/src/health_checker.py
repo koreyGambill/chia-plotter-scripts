@@ -8,16 +8,19 @@ from pathlib import Path
 from datetime import datetime, time, timedelta
 from email.message import EmailMessage
 
-# Set up logging
+
 file_path = os.path.dirname(__file__)
-health_checker_log_file = os.path.join(file_path, "logs/health-checker.log")
+root_path = os.path.join(file_path, '..')
+
+# Set up logging
+health_checker_log_file = os.path.join(root_path, "logs/health-checker.log")
 if not os.path.exists(health_checker_log_file):
     Path(health_checker_log_file).parent.mkdir(parents=True, exist_ok=True)
     open(health_checker_log_file, 'w').close
 logging.basicConfig(filename=health_checker_log_file, level=logging.DEBUG, format=f'%(asctime)s %(levelname)s: %(message)s')
 
 # Read out config
-health_check_config_file = os.path.join(file_path, "conf/health-check-config.json")
+health_check_config_file = os.path.join(root_path, "conf/health-check-config.json")
 if not os.path.exists(health_check_config_file):
     logging.error("health-check-config.json file is not configured.")
     raise FileNotFoundError("health-check-config.json file is not configured. "
@@ -31,7 +34,7 @@ SMTP_LOCATION = config_json['health_checker_config']['smtp_location']
 PORT = config_json['shared_config']['port']
 
 # Read out last notification data
-data_file = os.path.join(file_path, "data/health-checker-db.json")
+data_file = os.path.join(root_path, "data/health-checker-db.json")
 if not os.path.exists(data_file):
     Path(data_file).parent.mkdir(parents=True, exist_ok=True)
     with open(data_file, 'w') as data:
