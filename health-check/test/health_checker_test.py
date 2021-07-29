@@ -34,7 +34,7 @@ def test_main(monkeypatch):
     monkeypatch.setattr(smtplib, "SMTP", MockedSMTP)
     monkeypatch.setattr(smtplib, "SMTP_SSL", MockedSMTP)
 
-    health_checker.main()
+    health_checker.HealthChecker().health_check()
 
 
 # TODO: Create tests with fake data files so I can test the various conditions of should_send_email
