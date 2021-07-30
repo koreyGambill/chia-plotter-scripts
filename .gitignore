@@ -6,10 +6,10 @@ chia-plotter-config.txt
 test.sh
 
 ## Ignoring symlinks
-startPlotterGradually.sh
-startGUI.sh
-startPlotter.sh
-stopPlotter.sh
+/startPlotterGradually.sh
+/startGUI.sh
+/startPlotter.sh
+/stopPlotter.sh
 addNewFinalDirs.sh
 
 # Health Check
