@@ -14,7 +14,7 @@ addNewFinalDirs.sh
 
 # Health Check
 __pycache__
-health-check-env/
+.venv/
 health-check-config.json
 logs/
 data/
