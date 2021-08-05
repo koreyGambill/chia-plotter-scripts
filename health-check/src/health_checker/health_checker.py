@@ -48,7 +48,6 @@ def write_current_notification_data(current_notification_time, current_notificat
             "last_notification_time": str(current_notification_time),
             "last_notification_status": current_notification_status
             }))
-    return True
 
 def should_send_email(content):
     last_notification_data = get_last_notification_data()
@@ -80,6 +79,7 @@ def should_send_email(content):
 
     if should_send_email:
         write_current_notification_data(current_notification_time, current_notification_status)
+        return True
 
     logging.debug("Not sending email because the status did not change from {status} "
         "and the last notification was too recent: {time}".format(status=current_notification_status, time=last_notification_time))
@@ -89,7 +89,7 @@ def send_email(content, config_json):
     msg = EmailMessage()
     msg.set_content("Health check returned: %s" % content)
     msg['Subject'] = "Chia Health Status: %s" % content["result"]
-    msg['FROM'] = config_json['from_email']
+    msg['FROM'] = config_json['health_checker_config']['from_email']
     msg['TO'] = config_json['health_checker_config']['notification_email']
 
     logging.info("sending email: %s" % msg)
@@ -101,7 +101,7 @@ def send_email(content, config_json):
         gmail_app_password = os.getenv("gmail_app_password")
         if gmail_app_password != None:
             with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=ssl.create_default_context()) as server:
-                server.login(config_json['from_email'], gmail_app_password)
+                server.login(config_json['health_checker_config']['from_email'], gmail_app_password)
                 server.send_message(msg)
         else:
             logging.warning("Could not send email through gmail. gmail_app_password not set in environment variables.")
