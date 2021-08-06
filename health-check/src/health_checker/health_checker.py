@@ -66,7 +66,7 @@ def should_send_email(content):
 
     # If last and current status are healthy only notify every 24 hours.
     elif (current_notification_status == "healthy" 
-    and (current_notification_time - timedelta(hours=24)) > last_notification_time
+    and (current_notification_time - timedelta(hours=24)) >= last_notification_time
     and time(7,0,0) < datetime.now().time() < time(8,0,0)):
         logging.debug("Status is still healthy, but it's been 24 hours so sending notification email")
         should_send_email = True
