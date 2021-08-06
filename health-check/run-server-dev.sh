@@ -11,4 +11,4 @@ while [ -h "$source" ]; do # resolve $source until the file is no longer a symli
 done
 file_path="$( cd -P "$( dirname "$source" )" && pwd )"
 
-"$file_path/health-check-env/bin/python3" $file_path/src/health_check_server/app.py
+"$file_path/.venv/bin/python3" $file_path/src/health_check_server/app.py

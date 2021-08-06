@@ -44,13 +44,13 @@ chmod 744 $CHIA_PLOTTER_DIR/bin/*
 
 
 # Create symbolic links to make starting easier
-ln -s "$CHIA_PLOTTER_SCRIPTS_HOME/bin/startPlotter.sh" "$CHIA_PLOTTER_DIR"
-ln -s "$CHIA_PLOTTER_SCRIPTS_HOME/bin/startPlotterGradually.sh" "$CHIA_PLOTTER_DIR"
-ln -s "$CHIA_PLOTTER_SCRIPTS_HOME/bin/startGUI.sh" "$CHIA_PLOTTER_DIR"
-ln -s "$CHIA_PLOTTER_SCRIPTS_HOME/bin/stopPlotter.sh" "$CHIA_PLOTTER_DIR"
-ln -s "$CHIA_PLOTTER_SCRIPTS_HOME/bin/addNewFinalDirs.sh" "$CHIA_PLOTTER_DIR"
+ln -s "$CHIA_PLOTTER_DIR/bin/startPlotter.sh" "$CHIA_PLOTTER_SCRIPTS_HOME"
+ln -s "$CHIA_PLOTTER_DIR/bin/startPlotterGradually.sh" "$CHIA_PLOTTER_SCRIPTS_HOME"
+ln -s "$CHIA_PLOTTER_DIR/bin/startGUI.sh" "$CHIA_PLOTTER_SCRIPTS_HOME"
+ln -s "$CHIA_PLOTTER_DIR/bin/stopPlotter.sh" "$CHIA_PLOTTER_SCRIPTS_HOME"
+ln -s "$CHIA_PLOTTER_DIR/bin/addNewFinalDirs.sh" "$CHIA_PLOTTER_SCRIPTS_HOME"
 
-find $CHIA_PLOTTER_DIR -type l -exec chmod 744 {} \;
+find $CHIA_PLOTTER_SCRIPTS_HOME -type l -exec chmod 744 {} \;
 
 
 # Add alias' and variables

@@ -2,7 +2,7 @@
 This server indicates whether the chia farmer is still successfully farming. This is meant to be hit by another service - like a gcp cloud function - that will do health checks periodically and send an email if it's been down for x amount of time.
 
 ## Running Tests
-Must run pytest with the health-check-env activated. Can run pytest from directories chia-plotter-scripts/, health-check/, or test/. It will find all test_*.py or *_test.py files and run their tests.
+Must run pytest with the .venv activated. Can run pytest from directories chia-plotter-scripts/, health-check/, or test/. It will find all test_*.py or *_test.py files and run their tests.
 
 `pytest` - runs tests showing pass/fail output.
 `pytest --log-cli-level=DEBUG -s` - runs tests and prints logging to console.
@@ -10,8 +10,8 @@ Must run pytest with the health-check-env activated. Can run pytest from directo
 ## Setup Environment
 Navigate to health-check in terminal and run the commands
 ``` bash
-python3 -m venv ./health-check-env
-source ./health-check-env/bin/activate
+python3 -m venv ./.venv
+source ./.venv/bin/activate
 python3 -m pip install -r requirements.txt
 deactivate
 cp ./conf/health-check-config-example.json ./conf/health-check-config.json
@@ -131,8 +131,8 @@ This would be a great use for a raspberry pi - which is what I will run this fro
 Navigate to health-check in terminal and run the commands
 
 ``` bash
-python3 -m venv ./health-check-env
-source ./health-check-env/bin/activate
+python3 -m venv ./.venv
+source ./.venv/bin/activate
 python3 -m pip install -r requirements.txt
 deactivate
 cp ./conf/health-check-config-example.json ./conf/health-check-config.json
@@ -184,7 +184,7 @@ Wants=chia-health-checker.service
 [Service]
 Type=oneshot
 Environment=gmail_app_password=<password>
-ExecStart=/home/<user>/path/to/chia-plotter-scripts/health-check/health-check-env/bin/python3 /home/<user>/path/to/chia-plotter-scripts/health-check/src/health_checker.py
+ExecStart=/home/<user>/path/to/chia-plotter-scripts/health-check/.venv/bin/python3 /home/<user>/path/to/chia-plotter-scripts/health-check/src/health_checker.py
 
 [Install]
 WantedBy=multi-user.target
