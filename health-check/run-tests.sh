@@ -22,7 +22,7 @@ function print_help {
     exit 0
 }
 
-if [[ $1 == "-h" ]]; then 
+if [[ $1 == "-h" ]]; then
     print_help
 fi
 
@@ -31,4 +31,5 @@ if [[ $1 == "-v" ]]; then
     set_flag="-s"
 fi
 
+cd "$file_path"
 "$venv_python3" -m "pytest" "$set_debug" "$set_flag"
