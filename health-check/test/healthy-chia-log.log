@@ -1,0 +1,13 @@
+2021-08-05T18:02:09.428 full_node chia.full_node.mempool_manager: INFO     add_spendbundle took 0.12341234 seconds, cost 12341234 (0.1234%)
+2021-08-05T18:02:09.428 full_node chia.full_node.mempool_manager: INFO     Size of mempool: 7 spends, cost: 142511450 minimum fee to get in: 0
+2021-08-05T18:02:09.431 full_node chia.full_node.full_node: INFO     Block validation time: 0.12341234, cost: 12341234, percent full: 0.1234%
+2021-08-05T18:02:09.467 wallet chia.wallet.wallet_blockchain: INFO     💰 Updated wallet peak to height 12341234, weight 12341234, 
+2021-08-05T18:02:10.848 full_node chia.full_node.mempool_manager: INFO     It took 0.12341234 to pre validate transaction
+2021-08-05T18:02:10.851 full_node chia.full_node.mempool_manager: INFO     add_spendbundle took 0.12341234 seconds, cost 12341234 (0.1234%)
+2021-08-05T18:02:14.990 full_node chia.full_node.mempool_manager: INFO     It took 0.12341234 to pre validate transaction
+2021-08-05T18:02:15.010 full_node chia.full_node.mempool_manager: INFO     add_spendbundle took 12341234 seconds, cost 12341234 (0.1234%)
+2021-08-05T18:02:15.905 full_node chia.full_node.full_node: INFO     🌱 Updated peak to height 12341234, weight 12341234, hh 12341234, forked at 12341234, rh: 12341234, total iters: 12341234, overflow: False, deficit: 12341234, difficulty: 12341234, sub slot iters: 12341234, Generator size: No tx, Generator ref list size: No tx
+2021-08-05T18:02:15.909 full_node chia.full_node.full_node: INFO     Block validation time: 0.12341234, cost: None
+2021-08-05T18:02:15.927 wallet chia.wallet.wallet_blockchain: INFO     💰 Updated wallet peak to height 12341234, weight 12341234, 
+2021-08-05T18:02:17.661 full_node chia.full_node.full_node: INFO     ⏲️  Finished signage point 4/64: CC: 12341234 RC: 12341234 
+2021-08-05T18:02:17.782 harvester chia.harvester.harvester: INFO     3 plots were eligible for farming 123412341234... Found 0 proofs. Time: 0.11851 s. Total 1234 plots
