@@ -14,6 +14,7 @@ chia_logs_file = os.path.join(Path.home(), '.chia/mainnet/log/debug.log')
 
 LINES_TO_SEARCH=100
 DATETIME_REGEX = '^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}'
+UNHEALTHY_SECONDS = 600
 
 def setup_logging():
     if not os.path.exists(health_check_log_file):
@@ -60,8 +61,8 @@ def process_response_from_log(last_farming_log):
     logs_time_str = logs_time_match.group(0)
     datetime_logs = datetime.strptime(logs_time_str, '%Y-%m-%dT%H:%M:%S.%f')
     datetime_diff = (datetime.now() - datetime_logs).total_seconds()
-    
-    if datetime_diff > 600:
+
+    if datetime_diff > UNHEALTHY_SECONDS:
         return make_response({
             "result":"unhealthy",
             "message": "Service has been down for %d seconds." % datetime_diff,
@@ -87,6 +88,7 @@ def health_check():
     except Exception as e:
         # If I weren't sending this just to myself, I would send a more generic message and log the exception to look at later.
         # Because sending a "client" an error can be dangerous. However, I trust my email.
+        logging.error('An exception occurred while doing the health check: %s' % e)
         return make_response({
             "result":"unknown",
             "message": "Health check server caught exception %s" % e

@@ -10,4 +10,4 @@
 2021-08-05T18:02:15.909 full_node chia.full_node.full_node: INFO     Block validation time: 0.12341234, cost: None
 2021-08-05T18:02:15.927 wallet chia.wallet.wallet_blockchain: INFO     💰 Updated wallet peak to height 12341234, weight 12341234, 
 2021-08-05T18:02:17.661 full_node chia.full_node.full_node: INFO     ⏲️  Finished signage point 4/64: CC: 12341234 RC: 12341234 
-2021-08-05T18:02:17.782 harvester chia.harvester.harvester: INFO     3 plots were eligible for farming 123412341234... Found 0 proofs. Time: 0.11851 s. Total 1234 plots
+2021-08-05T17:55:17.782 harvester chia.harvester.harvester: INFO     3 plots were eligible for farming 123412341234... Found 0 proofs. Time: 0.11851 s. Total 1234 plots
