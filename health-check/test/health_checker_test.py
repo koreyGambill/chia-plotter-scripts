@@ -1,4 +1,5 @@
 import sys, os
+from unittest import mock
 sys.path.append(os.path.join(os.path.dirname(__file__), '..')) # Adding src packages path
 from src.health_checker import health_checker
 import requests
@@ -7,16 +8,19 @@ from unittest.mock import MagicMock
 from datetime import datetime
 import pytest
 
-# TODO: I would like to make the returned MockResponse dynamic based on the test. Can this be done with fixtures?
-healthy_message = {"result": "healthy", "message": "Service checked plots 99 seconds ago"}
-
 class MockResponse:
-    @staticmethod
-    def json():
-        return healthy_message
+    def __init__(self, result, message):
+        self.result = result
+        self.message = message
 
-def mock_response_get(*args, **kwargs):
-        return MockResponse()
+    def json(self):
+        return {
+            "result": self.result,
+            "message": self.message
+        }
+
+    def self(self, *args, **kwargs):
+        return self
 
 class MockedSMTP:
     def __init__(self, smtp_location, *args, **kwargs):
@@ -39,84 +43,59 @@ class MockedSMTP:
     def close(self):
         print('this is where it would close the connection')
 
-smtplib.SMTP=MockedSMTP
+class config:
+    def __init__(self, last_notification_time, last_notification_status, smtp_location):
+        self.last_notification_time = str(last_notification_time)
+        self.last_notification_status = last_notification_status
+        self.smtp_location = smtp_location
 
-def mocked_get_config_local():
-    return {
-    "health_checker_config": {
-        "notification_email": "some.user@gmail.com",
-        "from_email": "HealthCheckBot@chia-health-checker.dev",
-        "server": "127.0.0.1",
-        "smtp_location": "local"
-    },
-    "shared_config": {
-        "port": 5566
-    }
-}
+    def mocked_get_last_notification_data(self):
+        return {
+            "last_notification_time": self.last_notification_time,
+            "last_notification_status": self.last_notification_status
+        }
 
-def mocked_get_config_gmail():
-    return {
-    "health_checker_config": {
-        "notification_email": "some.user@gmail.com",
-        "from_email": "HealthCheckBot@chia-health-checker.dev",
-        "server": "127.0.0.1",
-        "smtp_location": "gmail"
-    },
-    "shared_config": {
-        "port": 5566
-    }
+    def mocked_get_config(self):
+        return {
+        "health_checker_config": {
+            "notification_email": "some.user@gmail.com",
+            "from_email": "HealthCheckBot@chia-health-checker.dev",
+            "server": "127.0.0.1",
+            "smtp_location": self.smtp_location
+        },
+        "shared_config": {
+            "port": 5566
+        }
 }
 
 def write_current_notification_data(*args):
     pass
 
-def default_setup_local(monkeypatch):
-    monkeypatch.setattr(requests, "get", mock_response_get)
+def setupXXX(monkeypatch, conf):
+    mock_response = MockResponse("healthy", "Service checked plots 99 seconds ago")
+    monkeypatch.setattr(requests, "get", mock_response.self)
     monkeypatch.setattr(smtplib, "SMTP", MockedSMTP)
     monkeypatch.setattr(smtplib, "SMTP_SSL", MockedSMTP)
-    monkeypatch.setattr(health_checker, "get_config", mocked_get_config_local)
     monkeypatch.setattr(health_checker, "write_current_notification_data", write_current_notification_data)
-    MockedSMTP.send_message = MagicMock()
-
-def default_setup_gmail(monkeypatch):
-    monkeypatch.setattr(requests, "get", mock_response_get)
-    monkeypatch.setattr(smtplib, "SMTP", MockedSMTP)
-    monkeypatch.setattr(smtplib, "SMTP_SSL", MockedSMTP)
-    monkeypatch.setattr(health_checker, "get_config", mocked_get_config_gmail)
-    monkeypatch.setattr(health_checker, "write_current_notification_data", write_current_notification_data)
+    monkeypatch.setattr(health_checker, 'get_config', conf.mocked_get_config)
+    monkeypatch.setattr(health_checker, "get_last_notification_data", conf.mocked_get_last_notification_data)
     MockedSMTP.send_message = MagicMock()
 
 def test_no_message_sent_healthy_status_no_switch(monkeypatch):
-    default_setup_local(monkeypatch)
-    # TODO: Can I make this function a fixture to make it more dynamic?
-    def mocked_get_last_notification_data():
-        return {
-            "last_notification_time": str(datetime.now()),
-            "last_notification_status": "healthy"
-        }
-    monkeypatch.setattr(health_checker, "get_last_notification_data", mocked_get_last_notification_data)
+    conf = config(last_notification_time="2021-08-05 16:20:42.972704", last_notification_status="healthy", smtp_location='local')
+    setupXXX(monkeypatch, conf)
     health_checker.health_check()
     MockedSMTP.send_message.assert_not_called()
 
 def test_message_sent_unhealthy_status_switch_local(monkeypatch):
-    default_setup_local(monkeypatch)
-    def mocked_get_last_notification_data():
-        return {
-            "last_notification_time": "2021-08-04 16:20:42.972704",
-            "last_notification_status": "unhealthy"
-        }
-    monkeypatch.setattr(health_checker, "get_last_notification_data", mocked_get_last_notification_data)
+    conf = config(last_notification_time="2021-08-04 16:20:42.972704", last_notification_status="unhealthy", smtp_location='local')
+    setupXXX(monkeypatch, conf)
     health_checker.health_check()
     MockedSMTP.send_message.assert_called_once()
 
 def test_message_sent_unhealthy_status_switch_gmail(monkeypatch):
-    default_setup_gmail(monkeypatch)
-    def mocked_get_last_notification_data():
-        return {
-            "last_notification_time": "2021-08-04 16:20:42.972704",
-            "last_notification_status": "unhealthy"
-        }
-    monkeypatch.setattr(health_checker, "get_last_notification_data", mocked_get_last_notification_data)
+    conf = config(last_notification_time="2021-08-04 16:20:42.972704", last_notification_status="unhealthy", smtp_location='gmail')
+    setupXXX(monkeypatch, conf)
     os.environ["gmail_app_password"] = "abcd1234"
     health_checker.health_check()
     MockedSMTP.send_message.assert_called_once()
