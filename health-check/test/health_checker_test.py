@@ -71,7 +71,7 @@ class config:
 def write_current_notification_data(*args):
     pass
 
-def setupXXX(monkeypatch, conf):
+def setup_tests(monkeypatch, conf):
     mock_response = MockResponse("healthy", "Service checked plots 99 seconds ago")
     monkeypatch.setattr(requests, "get", mock_response.self)
     monkeypatch.setattr(smtplib, "SMTP", MockedSMTP)
@@ -83,19 +83,19 @@ def setupXXX(monkeypatch, conf):
 
 def test_no_message_sent_healthy_status_no_switch(monkeypatch):
     conf = config(last_notification_time="2021-08-05 16:20:42.972704", last_notification_status="healthy", smtp_location='local')
-    setupXXX(monkeypatch, conf)
+    setup_tests(monkeypatch, conf)
     health_checker.health_check()
     MockedSMTP.send_message.assert_not_called()
 
 def test_message_sent_unhealthy_status_switch_local(monkeypatch):
     conf = config(last_notification_time="2021-08-04 16:20:42.972704", last_notification_status="unhealthy", smtp_location='local')
-    setupXXX(monkeypatch, conf)
+    setup_tests(monkeypatch, conf)
     health_checker.health_check()
     MockedSMTP.send_message.assert_called_once()
 
 def test_message_sent_unhealthy_status_switch_gmail(monkeypatch):
     conf = config(last_notification_time="2021-08-04 16:20:42.972704", last_notification_status="unhealthy", smtp_location='gmail')
-    setupXXX(monkeypatch, conf)
+    setup_tests(monkeypatch, conf)
     os.environ["gmail_app_password"] = "abcd1234"
     health_checker.health_check()
     MockedSMTP.send_message.assert_called_once()
