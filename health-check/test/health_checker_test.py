@@ -67,11 +67,15 @@ def mocked_get_config_gmail():
     }
 }
 
+def write_current_notification_data(*args):
+    pass
+
 def default_setup_local(monkeypatch):
     monkeypatch.setattr(requests, "get", mock_response_get)
     monkeypatch.setattr(smtplib, "SMTP", MockedSMTP)
     monkeypatch.setattr(smtplib, "SMTP_SSL", MockedSMTP)
     monkeypatch.setattr(health_checker, "get_config", mocked_get_config_local)
+    monkeypatch.setattr(health_checker, "write_current_notification_data", write_current_notification_data)
     MockedSMTP.send_message = MagicMock()
 
 def default_setup_gmail(monkeypatch):
@@ -79,6 +83,7 @@ def default_setup_gmail(monkeypatch):
     monkeypatch.setattr(smtplib, "SMTP", MockedSMTP)
     monkeypatch.setattr(smtplib, "SMTP_SSL", MockedSMTP)
     monkeypatch.setattr(health_checker, "get_config", mocked_get_config_gmail)
+    monkeypatch.setattr(health_checker, "write_current_notification_data", write_current_notification_data)
     MockedSMTP.send_message = MagicMock()
 
 def test_no_message_sent_healthy_status_no_switch(monkeypatch):
