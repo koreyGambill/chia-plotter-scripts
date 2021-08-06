@@ -35,7 +35,7 @@ def get_last_notification_data():
         with open(data_file, 'w') as data:
             # Write the initial data
             data.write(json.dumps({
-                "last_notification_time": str(datetime.now() - timedelta(hours=24)),
+                "last_notification_time": str(datetime.now() - timedelta(hours=8)),
                 "last_notification_status": str("unknown")
                 }))
     with open(data_file) as data:
@@ -64,11 +64,16 @@ def should_send_email(content):
         logging.debug("Status changed from %s to %s. Sending notification email" % (last_notification_status, current_notification_status))
         should_send_email = True
 
-    # If last and current status are healthy only notify every 24 hours.
-    elif (current_notification_status == "healthy" 
-    and (current_notification_time - timedelta(hours=24)) >= last_notification_time
+    # Always notify once in the morning between 7 and 8
+    elif ((current_notification_time - timedelta(hours=1)) >= last_notification_time
     and time(7,0,0) < datetime.now().time() < time(8,0,0)):
-        logging.debug("Status is still healthy, but it's been 24 hours so sending notification email")
+        logging.debug("Sending morning email between 7 and 8")
+        should_send_email = True
+
+    # if status is healthy then notify every 12 hours
+    elif (current_notification_status == "healthy" 
+    and (current_notification_time - timedelta(hours=12)) >= last_notification_time):
+        logging.debug("Status is still healthy, but it's been 12 hours so sending notification email")
         should_send_email = True
 
     # If status is not healthy then notify every 1 hour
