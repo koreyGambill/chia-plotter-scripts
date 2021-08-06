@@ -43,11 +43,27 @@ class MockedSMTP:
     def close(self):
         print('this is where it would close the connection')
 
-class config:
-    def __init__(self, last_notification_time, last_notification_status, smtp_location):
+class MockConfig:
+    def __init__(self, smtp_location):
+        self.smtp_location = smtp_location
+
+    def mocked_get_config(self):
+        return {
+            "health_checker_config": {
+                "notification_email": "some.user@gmail.com",
+                "from_email": "HealthCheckBot@chia-health-checker.dev",
+                "server": "127.0.0.1",
+                "smtp_location": self.smtp_location
+            },
+            "shared_config": {
+                "port": 5566
+            }
+        }
+
+class MockData:
+    def __init__(self, last_notification_time, last_notification_status):
         self.last_notification_time = str(last_notification_time)
         self.last_notification_status = last_notification_status
-        self.smtp_location = smtp_location
 
     def mocked_get_last_notification_data(self):
         return {
@@ -55,47 +71,39 @@ class config:
             "last_notification_status": self.last_notification_status
         }
 
-    def mocked_get_config(self):
-        return {
-        "health_checker_config": {
-            "notification_email": "some.user@gmail.com",
-            "from_email": "HealthCheckBot@chia-health-checker.dev",
-            "server": "127.0.0.1",
-            "smtp_location": self.smtp_location
-        },
-        "shared_config": {
-            "port": 5566
-        }
-}
-
-def write_current_notification_data(*args):
+def mocked_write_current_notification_data(*args):
     pass
 
-def setup_tests(monkeypatch, conf):
-    mock_response = MockResponse("healthy", "Service checked plots 99 seconds ago")
-    monkeypatch.setattr(requests, "get", mock_response.self)
+def setup_tests(monkeypatch, mock_server_response, mock_data, mock_config):
+    monkeypatch.setattr(requests, "get", mock_server_response.self)
     monkeypatch.setattr(smtplib, "SMTP", MockedSMTP)
     monkeypatch.setattr(smtplib, "SMTP_SSL", MockedSMTP)
-    monkeypatch.setattr(health_checker, "write_current_notification_data", write_current_notification_data)
-    monkeypatch.setattr(health_checker, 'get_config', conf.mocked_get_config)
-    monkeypatch.setattr(health_checker, "get_last_notification_data", conf.mocked_get_last_notification_data)
+    monkeypatch.setattr(health_checker, "write_current_notification_data", mocked_write_current_notification_data)
+    monkeypatch.setattr(health_checker, 'get_config', mock_config.mocked_get_config)
+    monkeypatch.setattr(health_checker, "get_last_notification_data", mock_data.mocked_get_last_notification_data)
     MockedSMTP.send_message = MagicMock()
 
 def test_no_message_sent_healthy_status_no_switch(monkeypatch):
-    conf = config(last_notification_time="2021-08-05 16:20:42.972704", last_notification_status="healthy", smtp_location='local')
-    setup_tests(monkeypatch, conf)
+    mock_server_response = MockResponse("healthy", "Service checked plots 99 seconds ago")
+    mock_data = MockData(last_notification_time="2021-08-05 16:20:42.972704", last_notification_status="healthy")
+    mock_config = MockConfig(smtp_location='local')
+    setup_tests(monkeypatch, mock_server_response, mock_data, mock_config)
     health_checker.health_check()
     MockedSMTP.send_message.assert_not_called()
 
 def test_message_sent_unhealthy_status_switch_local(monkeypatch):
-    conf = config(last_notification_time="2021-08-04 16:20:42.972704", last_notification_status="unhealthy", smtp_location='local')
-    setup_tests(monkeypatch, conf)
+    mock_server_response = MockResponse("healthy", "Service checked plots 99 seconds ago")
+    mock_data = MockData(last_notification_time="2021-08-04 16:20:42.972704", last_notification_status="unhealthy")
+    mock_config = MockConfig(smtp_location='local')
+    setup_tests(monkeypatch, mock_server_response, mock_data, mock_config)
     health_checker.health_check()
     MockedSMTP.send_message.assert_called_once()
 
 def test_message_sent_unhealthy_status_switch_gmail(monkeypatch):
-    conf = config(last_notification_time="2021-08-04 16:20:42.972704", last_notification_status="unhealthy", smtp_location='gmail')
-    setup_tests(monkeypatch, conf)
+    mock_server_response = MockResponse("healthy", "Service checked plots 99 seconds ago")
+    mock_data = MockData(last_notification_time="2021-08-04 16:20:42.972704", last_notification_status="unhealthy")
+    mock_config = MockConfig(smtp_location='local')
+    setup_tests(monkeypatch, mock_server_response, mock_data, mock_config)
     os.environ["gmail_app_password"] = "abcd1234"
     health_checker.health_check()
     MockedSMTP.send_message.assert_called_once()
