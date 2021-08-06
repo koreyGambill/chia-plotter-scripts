@@ -5,8 +5,13 @@ from src.health_checker import health_checker
 import requests
 import smtplib
 from unittest.mock import MagicMock
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytest
+from freezegun import freeze_time
+
+###################################
+# Setup Mocks
+###################################
 
 class MockResponse:
     def __init__(self, result, message):
@@ -83,30 +88,109 @@ def setup_tests(monkeypatch, mock_server_response, mock_data, mock_config):
     monkeypatch.setattr(health_checker, "get_last_notification_data", mock_data.mocked_get_last_notification_data)
     MockedSMTP.send_message = MagicMock()
 
-def test_no_message_sent_healthy_status_no_switch(monkeypatch):
+###################################
+# Start Tests
+###################################
+
+def test_status_switched(monkeypatch):
+    mock_server_response = MockResponse("unhealthy", "Service has been down for 999 seconds")
+    last_notification_time = datetime.now() - timedelta(minutes=30)
+    mock_data = MockData(last_notification_time=last_notification_time, last_notification_status="healthy")
+    mock_config = MockConfig(smtp_location='local')
+    setup_tests(monkeypatch, mock_server_response, mock_data, mock_config)
+
+    health_checker.health_check()
+    MockedSMTP.send_message.assert_called_once()
+
+def test_message_sent_healthy_unhealthy_switch_gmail(monkeypatch):
     mock_server_response = MockResponse("healthy", "Service checked plots 99 seconds ago")
-    mock_data = MockData(last_notification_time="2021-08-05 16:20:42.972704", last_notification_status="healthy")
+    mock_data = MockData(last_notification_time="2021-08-04 16:20:42.972704", last_notification_status="unhealthy")
+    mock_config = MockConfig(smtp_location='local')
+    setup_tests(monkeypatch, mock_server_response, mock_data, mock_config)
+
+    os.environ["gmail_app_password"] = "abcd1234"
+    health_checker.health_check()
+    MockedSMTP.send_message.assert_called_once()
+
+###################################
+# The rest have status NOT switched
+###################################
+
+def test_healthy_in_morning_window_no_recent_notification(monkeypatch):
+    mock_server_response = MockResponse("healthy", "Service checked plots 99 seconds ago")
+    some_morning_time = datetime(2021, 8, 5, 7, 35, 12, 123)
+    last_notification_time = some_morning_time - timedelta(minutes=90)
+    mock_data = MockData(last_notification_time=last_notification_time, last_notification_status="healthy")
+    mock_config = MockConfig(smtp_location='local')
+    setup_tests(monkeypatch, mock_server_response, mock_data, mock_config)
+    with freeze_time(str(some_morning_time)):
+        health_checker.health_check()
+    MockedSMTP.send_message.assert_called_once()
+
+def test_healthy_in_morning_window_with_recent_notification(monkeypatch):
+    mock_server_response = MockResponse("healthy", "Service checked plots 99 seconds ago")
+    some_morning_time = datetime(2021, 8, 5, 7, 35, 12, 123)
+    last_notification_time = some_morning_time - timedelta(minutes=20)
+    mock_data = MockData(last_notification_time=last_notification_time, last_notification_status="healthy")
+    mock_config = MockConfig(smtp_location='local')
+    setup_tests(monkeypatch, mock_server_response, mock_data, mock_config)
+    with freeze_time(str(some_morning_time)):
+        health_checker.health_check()
+    MockedSMTP.send_message.assert_not_called()
+
+def test_healthy_no_recent_notification(monkeypatch):
+    mock_server_response = MockResponse("healthy", "Service checked plots 99 seconds ago")
+    last_notification_time = datetime.now() - timedelta(hours=12)
+    mock_data = MockData(last_notification_time=last_notification_time, last_notification_status="healthy")
+    mock_config = MockConfig(smtp_location='local')
+    setup_tests(monkeypatch, mock_server_response, mock_data, mock_config)
+    health_checker.health_check()
+    MockedSMTP.send_message.assert_called_once()
+
+def test_healthy_with_recent_notification(monkeypatch):
+    mock_server_response = MockResponse("healthy", "Service checked plots 99 seconds ago")
+    last_notification_time = datetime.now() - timedelta(hours=11)
+    mock_data = MockData(last_notification_time=last_notification_time, last_notification_status="healthy")
     mock_config = MockConfig(smtp_location='local')
     setup_tests(monkeypatch, mock_server_response, mock_data, mock_config)
     health_checker.health_check()
     MockedSMTP.send_message.assert_not_called()
 
-def test_message_sent_unhealthy_status_switch_local(monkeypatch):
-    mock_server_response = MockResponse("healthy", "Service checked plots 99 seconds ago")
-    mock_data = MockData(last_notification_time="2021-08-04 16:20:42.972704", last_notification_status="unhealthy")
+def test_unhealthy_no_recent_notification(monkeypatch):
+    mock_server_response = MockResponse("unhealthy", "Service has been down for 999 seconds")
+    last_notification_time = datetime.now() - timedelta(minutes=60)
+    mock_data = MockData(last_notification_time=last_notification_time, last_notification_status="unhealthy")
     mock_config = MockConfig(smtp_location='local')
     setup_tests(monkeypatch, mock_server_response, mock_data, mock_config)
     health_checker.health_check()
     MockedSMTP.send_message.assert_called_once()
 
-def test_message_sent_unhealthy_status_switch_gmail(monkeypatch):
-    mock_server_response = MockResponse("healthy", "Service checked plots 99 seconds ago")
-    mock_data = MockData(last_notification_time="2021-08-04 16:20:42.972704", last_notification_status="unhealthy")
+def test_unhealthy_with_recent_notification(monkeypatch):
+    mock_server_response = MockResponse("unhealthy", "Did not find an eligible farming log in the last X entries")
+    last_notification_time = datetime.now() - timedelta(minutes=59)
+    mock_data = MockData(last_notification_time=last_notification_time, last_notification_status="unhealthy")
     mock_config = MockConfig(smtp_location='local')
     setup_tests(monkeypatch, mock_server_response, mock_data, mock_config)
-    os.environ["gmail_app_password"] = "abcd1234"
+    health_checker.health_check()
+    MockedSMTP.send_message.assert_not_called()
+
+def test_unknown_no_recent_notification(monkeypatch):
+    mock_server_response = MockResponse("unknown", "Health check server caught exception")
+    last_notification_time = datetime.now() - timedelta(minutes=700)
+    mock_data = MockData(last_notification_time=last_notification_time, last_notification_status="unknown")
+    mock_config = MockConfig(smtp_location='local')
+    setup_tests(monkeypatch, mock_server_response, mock_data, mock_config)
     health_checker.health_check()
     MockedSMTP.send_message.assert_called_once()
+
+def test_unknown_with_recent_notification(monkeypatch):
+    mock_server_response = MockResponse("unknown", "Some other exception message")
+    last_notification_time = datetime.now() - timedelta(minutes=40)
+    mock_data = MockData(last_notification_time=last_notification_time, last_notification_status="unknown")
+    mock_config = MockConfig(smtp_location='local')
+    setup_tests(monkeypatch, mock_server_response, mock_data, mock_config)
+    health_checker.health_check()
+    MockedSMTP.send_message.assert_not_called()
 
 # Used for debugging
 if __name__ == "__main__":

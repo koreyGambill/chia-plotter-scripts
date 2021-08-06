@@ -78,7 +78,7 @@ def should_send_email(content):
 
     # If status is not healthy then notify every 1 hour
     elif (current_notification_status != "healthy"
-    and (current_notification_time - timedelta(hours=1)) > last_notification_time):
+    and (current_notification_time - timedelta(hours=1)) >= last_notification_time):
         logging.debug("Status is still not healthy, but it's been 1 hour so sending notification email")
         should_send_email = True
 
