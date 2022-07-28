@@ -1,5 +1,5 @@
 #!/bin/bash
-set +eux 
+set -euxo pipefail
 
 cat /proc/mdstat
 sudo umount /dev/md0
