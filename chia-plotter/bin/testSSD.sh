@@ -1,5 +1,5 @@
 #!/bin/bash
-set +eux
+set -euxo pipefail
 
 if [[ $# -eq 1 ]]; then
 
