@@ -1,5 +1,5 @@
 #!/bin/bash
-set +eux 
+set -euxo pipefail
 
 # Edit the sudo mdadm command, then copy-paste everything
 
