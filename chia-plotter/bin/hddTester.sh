@@ -1,5 +1,5 @@
 #!/bin/bash
-set +eux
+set -euxo pipefail
 
 apt update
 apt install -y fio
